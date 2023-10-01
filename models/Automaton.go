@@ -1,13 +1,14 @@
-package main
+package models
 
 type Automaton struct {
-	status bool
-	states []string
+	Status bool
+	States []string
 }
 
-func automaton(text string) *Automaton {
+func Validation(text string) *Automaton {
 
 	var states []string
+	statesMaxLength := 10
 
 	state := "q0"
 	states = append(states, state)
@@ -20,31 +21,31 @@ func automaton(text string) *Automaton {
 			} else if entry == 'Z' {
 				state = "q2"
 			} else {
-				break
+				state = "error"
 			}
 		case "q1":
 			if entry >= 'W' && entry <= 'Z' {
 				state = "q3"
 			} else {
-				break
+				state = "error"
 			}
 		case "q2":
 			if entry >= 'A' && entry <= 'C' {
 				state = "q3"
 			} else {
-				break
+				state = "error"
 			}
 		case "q3":
 			if entry >= 'A' && entry <= 'Z' {
 				state = "q4"
 			} else {
-				break
+				state = "error"
 			}
 		case "q4":
 			if entry == '-' {
 				state = "q5"
 			} else {
-				break
+				state = "error"
 			}
 		case "q5":
 			if entry == '0' {
@@ -52,7 +53,7 @@ func automaton(text string) *Automaton {
 			} else if entry >= '1' && entry <= '9' {
 				state = "q11"
 			} else {
-				break
+				state = "error"
 			}
 		case "q6":
 			if entry == '0' {
@@ -60,57 +61,73 @@ func automaton(text string) *Automaton {
 			} else if entry >= '1' && entry <= '9' {
 				state = "q9"
 			} else {
-				break
+				state = "error"
 			}
 		case "q7":
 			if entry >= '1' && entry <= '9' {
 				state = "q8"
 			} else {
-				break
+				state = "error"
 			}
 		case "q8", "q10", "q13":
 			if entry == '-' {
 				state = "q14"
 			} else {
-				break
+				state = "error"
 			}
 		case "q9":
 			if entry >= '0' && entry <= '9' {
 				state = "q10"
 			} else {
-				break
+				state = "error"
 			}
 		case "q11":
 			if entry >= '0' && entry <= '9' {
 				state = "q12"
 			} else {
-				break
+				state = "error"
 			}
 		case "q12":
 			if entry >= '0' && entry <= '9' {
 				state = "q13"
 			} else {
-				break
+				state = "error"
 			}
 		case "q14":
 			if entry >= 'A' && entry <= 'Z' {
 				state = "q15"
 			} else {
-				break
+				state = "error"
+			}
+		case "error":
+			return &Automaton{
+				Status: false,
+				States: states,
 			}
 		}
 		states = append(states, state)
+		if state == "q15" {
+			break
+		}
+	}
+
+	if len(text) > statesMaxLength {
+		states = append(states, "La cadena supera lo valido")
+		return &Automaton{
+			Status: false,
+			States: states,
+		}
 	}
 
 	if state == "q15" {
 		return &Automaton{
-			status: true,
-			states: states,
+			Status: true,
+			States: states,
 		}
 	} else {
 		return &Automaton{
-			status: false,
-			states: states,
+			Status: false,
+			States: states,
 		}
 	}
 
